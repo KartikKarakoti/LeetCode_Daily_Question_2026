@@ -1,0 +1,19 @@
+class Solution:
+    def maxLevelSum(self, root):
+        def dfs(node, level_sum, level):
+            if not node:
+                return
+
+            if level == len(level_sum):
+                level_sum.append(node.val)
+            else:
+                level_sum[level] += node.val
+
+            dfs(node.left, level_sum, level + 1)
+            dfs(node.right, level_sum, level + 1)
+
+        level_sum = []
+        dfs(root, level_sum, 0)
+
+        # levels are 1-indexed
+        return level_sum.index(max(level_sum)) + 1
