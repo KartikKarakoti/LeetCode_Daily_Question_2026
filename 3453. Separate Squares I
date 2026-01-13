@@ -1,0 +1,37 @@
+class Solution(object):
+    def separateSquares(self, squares):
+        """
+        :type squares: List[List[int]]
+        :rtype: float
+        """
+        total_area = sum(float(l * l) for _, _, l in squares)
+        half_area = float(total_area) / 2
+        
+        events = []
+        for x, y, l in squares:
+            events.append((y, 1, l))
+            events.append((y + l, -1, l))
+        
+        events.sort()
+        
+        current_area = 0.0 
+        prev_y = float(events[0][0])
+        width = 0.0
+        
+        for y, event_type, l in events:
+            y = float(y)
+            l = float(l)
+            if y != prev_y:
+                area_contributed = float(width) * (y - prev_y) 
+                
+                if current_area + area_contributed >= half_area:
+                    remaining_area = float(half_area - current_area)
+                    return float(prev_y + remaining_area / width)
+                
+                current_area += area_contributed 
+            
+            if event_type == 1:
+                width += l
+            else:
+                width -= l 
+            prev_y = y
