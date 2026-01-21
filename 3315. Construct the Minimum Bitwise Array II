@@ -1,0 +1,17 @@
+class Solution(object):
+    def minBitwiseArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        ans = []
+        for n in nums:
+            if n == 2:
+                ans.append(-1)
+            elif n % 2 == 0:
+                ans.append(-1)
+            else:
+                lowest_zero_bit = (~n) & (n + 1)
+                ans.append(n - (lowest_zero_bit >> 1))
+        return ans
+        
