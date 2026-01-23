@@ -1,0 +1,106 @@
+import heapq
+
+class Solution:
+    def minimumPairRemoval(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        if n <= 1:
+            return 0
+        
+        # Quick check if already sorted
+        for i in range(n-1):
+            if nums[i] > nums[i+1]:
+                break
+        else:
+            return 0
+        
+        # Use arrays for efficient linked list simulation
+        arr = nums[:]
+        next_idx = list(range(1, n)) + [-1]
+        prev_idx = [-1] + list(range(n-1))
+        valid = [True] * n
+        
+        # Initial heap
+        heap = []
+        for i in range(n-1):
+            heapq.heappush(heap, (arr[i] + arr[i+1], i))
+        
+        operations = 0
+        
+        # We'll maintain a set of violation indices
+        # A violation is at index i if arr[i] > arr[next_idx[i]] and both are valid
+        violations = set()
+        for i in range(n-1):
+            if arr[i] > arr[i+1]:
+                violations.add(i)
+        
+        while heap and violations:
+            # Get minimum sum pair
+            current_sum, left = heapq.heappop(heap)
+            
+            # Skip if invalid
+            if not valid[left]:
+                continue
+            
+            right = next_idx[left]
+            if right == -1 or not valid[right]:
+                continue
+            
+            # Check if sum is still correct
+            if arr[left] + arr[right] != current_sum:
+                heapq.heappush(heap, (arr[left] + arr[right], left))
+                continue
+            
+            # Perform merge
+            operations += 1
+            
+            # Update violations that will be removed
+            # Check left with its previous
+            prev = prev_idx[left]
+            if prev != -1 and valid[prev] and arr[prev] > arr[left]:
+                violations.discard(prev)
+            
+            # Check left with right
+            if arr[left] > arr[right]:
+                violations.discard(left)
+            
+            # Check right with its next
+            next_right = next_idx[right]
+            if next_right != -1 and valid[next_right] and arr[right] > arr[next_right]:
+                violations.discard(right)
+            
+            # Update array and links
+            arr[left] = current_sum
+            valid[right] = False
+            
+            # Update next pointer for left
+            next_idx[left] = next_right
+            if next_right != -1:
+                prev_idx[next_right] = left
+            
+            # Update violations that are created or might be affected
+            # Check left with its previous (if it exists)
+            if prev != -1 and valid[prev]:
+                if arr[prev] > arr[left]:
+                    violations.add(prev)
+                else:
+                    violations.discard(prev)
+            
+            # Check left with its new next (if it exists)
+            if next_right != -1 and valid[next_right]:
+                if arr[left] > arr[next_right]:
+                    violations.add(left)
+                else:
+                    violations.discard(left)
+            
+            # Add new pairs to heap
+            if prev != -1 and valid[prev]:
+                heapq.heappush(heap, (arr[prev] + arr[left], prev))
+            
+            if next_right != -1 and valid[next_right]:
+                heapq.heappush(heap, (arr[left] + arr[next_right], left))
+        
+        return operations
