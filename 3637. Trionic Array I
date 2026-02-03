@@ -1,0 +1,48 @@
+class Solution(object):
+    def isTrionic(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        index = 0
+        ln = len(nums)
+        if ln < 4:
+            return False
+        #if ln == 4 and nums[1] < nums[2]:
+        #    return False
+        sec1 = 1
+        sec2 = 0
+        sec3 = 0
+        ln1 = ln - 1
+        if nums[1] < nums[0] or nums[-1] < nums[-2]:
+        #if nums[1] < nums[0]:
+            return False
+        while index < ln1:
+            if sec1 == 1:
+                if nums[index] < nums[index+1]:
+                    index += 1
+                #elif nums[index] > nums[index+1] and nums[index-1] < nums[index]:
+                elif nums[index] > nums[index+1]:
+                    sec1 = 0
+                    sec2 = 1
+                    index += 1
+                else:
+                    return False
+            elif sec2 == 1:
+                if nums[index] > nums[index+1]:
+                    index += 1
+                #elif nums[index] < nums[index+1] and nums[index-1] > nums[index]:
+                elif nums[index] < nums[index+1]:
+                    sec2 = 0
+                    sec3 = 1
+                    index += 1
+                else:
+                    return False
+            elif sec3 == 1:
+                if nums[index] < nums[index+1]:
+                    index += 1
+                else:
+                    return False
+        if sec1 == 1 or sec2 == 1:
+            return False
+        return True
