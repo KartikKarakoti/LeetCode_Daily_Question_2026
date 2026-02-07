@@ -1,0 +1,15 @@
+class Solution(object):
+    def minimumDeletions(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        count = 0
+        answer = 0
+        for c in s:
+            if c == 'b':
+                count += 1
+            elif count:
+                answer += 1
+                count -= 1
+        return answer
