@@ -1,0 +1,26 @@
+class Solution(object):
+    def findKthBit(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        s='0'
+        def reverse(s):
+            return s[::-1]
+        
+        def invert(s):
+            st=''
+            for c in s:
+                if c=='0':
+                    st+='1'
+                else:
+                    st+='0'
+
+            return st
+        
+        for i in range(n):
+            s+='1'+reverse(invert(s))
+            if len(s)>k:
+                return s[k-1]
+        return s[k-1]
