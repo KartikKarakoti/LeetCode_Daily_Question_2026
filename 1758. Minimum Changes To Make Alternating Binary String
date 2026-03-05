@@ -1,0 +1,21 @@
+class Solution(object):
+    def minOperations(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        c=""
+        k=""
+        t1=0
+        t2=0
+        for i in range(len(s)//2+1):
+            c+="01"
+            k+="10"
+        c=c[:len(s)]
+        k=k[:len(s)]
+        for i in range(len(s)):
+            if s[i]!=c[i]:
+                t1+=1
+            elif s[i]!=k[i]:
+                t2+=1
+        return min(t1,t2)
