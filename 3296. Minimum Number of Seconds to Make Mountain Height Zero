@@ -1,0 +1,33 @@
+class Solution(object):
+    def minNumberOfSeconds(self, mountainHeight, workerTimes):
+        """
+        :type mountainHeight: int
+        :type workerTimes: List[int]
+        :rtype: int
+        """
+
+        def can_complete_in(time_limit):
+            total_layers = 0
+            for t in workerTimes:
+                low, high = 0, int(2 * (time_limit // t) ** 0.5) + 2
+                while low < high:
+                    mid = (low + high + 1) // 2
+                    if t * mid * (mid + 1) // 2 <= time_limit:
+                        low = mid
+                    else:
+                        high = mid - 1
+                total_layers += low
+                if total_layers >= mountainHeight:
+                    return True
+            return total_layers >= mountainHeight
+
+        left, right = 0, 10**18
+        ans = right
+        while left <= right:
+            mid = (left + right) // 2
+            if can_complete_in(mid):
+                ans = mid
+                right = mid - 1
+            else:
+                left = mid + 1
+        return ans
