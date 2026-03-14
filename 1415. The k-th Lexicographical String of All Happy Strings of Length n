@@ -1,0 +1,31 @@
+class Solution(object):
+    def getHappyString(self, n, k):
+        """
+        :type n: int
+        :type k: int
+        :rtype: str
+        """
+        letters=["a","b","c"]
+        ans=[""]
+        stack=[]
+        cnt=[0]
+        def dfs():
+            if cnt[0]==k:
+                return 
+            if len(stack)==n:
+                ans[0]="".join(stack)
+                cnt[0]+=1
+                return 
+            for i in range(3):
+                if not stack or stack[-1]!=letters[i]:
+                    stack.append(letters[i])
+                    dfs()
+                    stack.pop()
+        dfs()
+        if cnt[0]<k:
+            return ""
+        return ans[0]
+       
+        
+
+        
