@@ -1,0 +1,108 @@
+class Solution(object):
+    def getBiggestThree(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: List[int]
+        """
+
+        res_heap = []
+        res_set = set()
+        
+        def custom_push(val):
+            if val in res_set:
+                return
+            heapq.heappush(res_heap, val)
+            res_set.add(val)
+
+            if len(res_heap) > 3:
+                pop = heapq.heappop(res_heap)
+                res_set.remove(pop)
+            
+            return
+
+            
+
+        ROWS = len(grid)
+        COLS = len(grid[0])
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                custom_push(grid[r][c])
+        
+        #print res_heap
+        diag_mat = [[grid[0][c] for c in range(COLS)]]
+        xdiag_mat = [[grid[0][c] for c in range(COLS)]]
+        for r in range(1,ROWS):
+            diag_mat.append([])
+            xdiag_mat.append([])
+            for c in range(COLS):
+                if c > 0:
+                    diag_mat[-1].append(grid[r][c] + diag_mat[-2][c-1])
+                else:
+                    diag_mat[-1].append(grid[r][c])
+
+                if c < COLS-1:
+                    xdiag_mat[-1].append(grid[r][c] + xdiag_mat[-2][c+1])
+                else:
+                    xdiag_mat[-1].append(grid[r][c])
+        
+        #print diag_mat
+        #print xdiag_mat
+
+        for l in range(3,COLS+1,2):
+            for r in range(ROWS):
+                upr = r - l//2
+                if upr < 0:
+                    continue
+                lwr = r + l//2
+                if lwr >= ROWS:
+                    break
+                
+                for c in range(COLS-l+1):
+                    cur = 0
+                    
+                    r00 = r
+                    c00 = c
+                    r01 = upr
+                    c01 = c + l//2
+                    r10 = r
+                    c10 = c + l - 1
+                    r11 = lwr
+                    c11 = c01
+
+                    if r01 > 0 and c01 < COLS-1:
+                        cur += xdiag_mat[r00][c00] - xdiag_mat[r01-1][c01+1]
+                    else:
+                        cur +=  xdiag_mat[r00][c00]
+                    
+                    if r01 > 0 and c01 > 0:
+                        cur += diag_mat[r10][c10] - diag_mat[r01-1][c01-1]
+                    else:
+                        cur += diag_mat[r10][c10]
+                    
+                    if r10 > 0 and c10 < COLS-1:
+                        cur += xdiag_mat[r11][c11] - xdiag_mat[r10-1][c10+1]
+                    else:
+                        cur += xdiag_mat[r11][c11]
+                    
+                    if r00 > 0 and c00 > 0:
+                        cur += diag_mat[r11][c11] - diag_mat[r00-1][c00-1]
+                    else:
+                        cur += diag_mat[r11][c11]
+                    
+                    cur -= (grid[r00][c00]+grid[r01][c01]+grid[r10][c10]+grid[r11][c11])
+
+                    custom_push(cur)
+
+        #return res_heap
+        #res_heap.reverse()
+        res_arr = []
+
+        while len(res_heap) > 0:
+            res_arr.append(heapq.heappop(res_heap))
+        res_arr.sort(reverse=True)
+        return res_arr
+
+
+
+
