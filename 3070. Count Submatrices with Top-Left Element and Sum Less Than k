@@ -1,0 +1,44 @@
+class Solution(object):
+    def countSubmatrices(self, grid, k):
+        """
+        :type grid: List[List[int]]
+        :type k: int
+        :rtype: int
+        """
+        
+        # All submatrices must include the top left corner
+        # This suggests a prefix sum approach where the column totals are used to avoid recomputing values
+
+        column_totals = [n for n in grid[0]]
+        ROWS = len(grid)
+        COLS = len(grid[0])
+
+        res = 0
+        running_total = 0
+
+        for total in column_totals:
+            running_total += total
+            if running_total <= k:
+                res += 1
+            else:
+                break
+
+        for row_index in range(1, ROWS):
+            column_totals[0] += grid[row_index][0]
+            if column_totals[0] <= k:
+                res += 1
+            else:
+                break
+
+            running_total = column_totals[0]
+
+            for column_index in range(1, COLS):
+                cell_value = grid[row_index][column_index]
+                column_totals[column_index] += cell_value
+                running_total += column_totals[column_index]
+                if running_total <= k:
+                    res += 1
+                else:
+                    break
+
+        return res
