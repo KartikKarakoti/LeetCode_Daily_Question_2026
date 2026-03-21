@@ -1,0 +1,13 @@
+class Solution(object):
+    def reverseSubmatrix(self, grid, x, y, k):
+        l=x+k-1 
+        while l>x:
+            for j in range(y,y+k):
+               grid[x][j], grid[l][j] = grid[l][j], grid[x][j]
+            l-=1
+            x+=1
+        return grid 
+
+
+
+        
