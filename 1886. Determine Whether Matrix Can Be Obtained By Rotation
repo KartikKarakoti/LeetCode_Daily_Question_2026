@@ -1,0 +1,12 @@
+class Solution(object):
+    def findRotation(self, mat, target):
+        for i in range(4):
+            if mat==target:
+                return True
+            for j in range(len(mat)):
+                for k in range(j,len(mat[0])):
+                    mat[j][k],mat[k][j]=mat[k][j],mat[j][k]
+            for j in range(len(mat)):
+                mat[j].reverse()
+
+        return False
