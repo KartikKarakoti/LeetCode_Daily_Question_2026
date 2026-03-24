@@ -1,0 +1,36 @@
+class Solution(object):
+    def constructProductMatrix(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        prod=1
+        n=len(grid)
+        m=len(grid[0])
+        ans=[[0]*m for i in range(n)]
+        prefix=1
+        suffix=1
+        # for i in range(n):
+        #     for j in range(m):
+        #         ans[i][j]=prefix
+        #         prefix*=grid[i][j]
+        # for i in range(n-1,-1,-1):
+        #     for j in range(m-1,-1,-1):
+        #         ans[i][j]=(ans[i][j]*suffix)%12345
+        #         suffix*=grid[i][j]
+        # return ans
+        for i in range(n*m):
+            row=i//m
+            col=i%m 
+            ans[row][col]=prefix%12345
+            prefix*=grid[row][col]%12345
+        for i in range(n*m-1,-1,-1): 
+            row=i//m
+            col=i%m
+            ans[row][col]=(ans[row][col]*suffix)%12345
+            suffix*=grid[row][col]%12345
+        return ans
+
+
+        
+        
